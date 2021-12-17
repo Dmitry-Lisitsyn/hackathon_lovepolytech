@@ -1,0 +1,17 @@
+
+<div class="tree filter">
+    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseTree" role="button" aria-expanded="false" aria-controls="collapseTree">
+        Link with href
+    </a>
+    <div class="collapse" id="collapseTree">
+        <div class="card">
+            <a *ngFor="let treeEl of treeclass7" 
+            (click)="treeElClick(treeEl.child)" 
+            class="btn elementStr" data-toggle="collapse" 
+            href="" role="button" aria-expanded="false" 
+            aria-controls="collapseTree">
+                {{treeEl.caption}}
+            </a>
+        </div>
+    </div>
+</div>
