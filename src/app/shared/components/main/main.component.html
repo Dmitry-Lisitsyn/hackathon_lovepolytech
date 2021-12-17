@@ -80,8 +80,8 @@
 
 
 
-                <div id="mainForgeViewerDiv">
-                    <adsk-forge-viewer [viewerOptions]="viewerOptions"
+                <div id="mainForgeViewerDiv" [style.display]="forgeViewerDisplay">
+                    <adsk-forge-viewer [viewerOptions]="viewerOptions" 
                     (onSelectionChanged)="selectionChanged($event)"></adsk-forge-viewer>
                 </div>
 
@@ -90,13 +90,15 @@
 
 
 
-<!-- 
 
 
-    <div class="imgcontainer">
-        <img src={{item.link}}>
-    </div>
--->
+
+                <div class="imgcontainer"  [style.display]="drawingDisplay">
+                    <img src={{item.link}}>
+                </div>
+
+
+
                 <div class="textcontainer">
                     <div class="number">
                         <h3>Код: {{item.num}}</h3>
@@ -106,6 +108,9 @@
                         <ng-container *ngFor="let item of classDiscription">
                             <p>{{item}}</p>
                         </ng-container>
+                    </div>
+                    <div class="buttonContainer">
+                        <button class="btn btn-dark" (click)='showDrawing()'>Чертёж</button>
                     </div>
                 </div>
             </div>
