@@ -1,6 +1,17 @@
 import { NgClass } from '@angular/common';
 import { literalMap } from '@angular/compiler';
 import { Component, Input, OnInit, EventEmitter} from '@angular/core';
+import {
+  ViewerOptions,
+  ViewerInitializedEvent,
+  DocumentChangedEvent,
+  SelectionChangedEventArgs,
+  Extension
+} from "ng2-adsk-forge-viewer";
+import { MyExtension } from "./my-extension";
+
+export const ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IlU3c0dGRldUTzlBekNhSzBqZURRM2dQZXBURVdWN2VhIn0.eyJzY29wZSI6WyJkYXRhOnJlYWQiLCJkYXRhOndyaXRlIiwiZGF0YTpjcmVhdGUiLCJidWNrZXQ6Y3JlYXRlIiwiYnVja2V0OnVwZGF0ZSIsImJ1Y2tldDpyZWFkIl0sImNsaWVudF9pZCI6IjN5dGNJRVBjbEVjck9VV0g2ZDZkWVFzVFJ4OUExT0lTIiwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2Fqd3RleHA2MCIsImp0aSI6ImxndE1OTmNqZUtxODJ2YUxmeVoybWdTVkVjMXJCbW5FQWVmYm9uSEJiZjc2R1VYUFQ3TmludlhtazBaZmEySnEiLCJleHAiOjE2Mzk3NDUwMzR9.XDbnycuLBt5xJrcX-ClPZhxJZS6JJRXPz_SDOA7H8X4TBFKh3eZkLXGtZaT0iPWuS13MnqviPZkdmAW7gGCOKbGyptL1P46oMEYZGfvoILuZqN5t2sJSMX6L7YFyK5pBab9p3UAO6aLJq47JeR-FxDPqqh5etaydux6UaSj5GYoYjhqFLudEbgw6o_af1x1hU5JnxG_rU_eXjC3gO3Ybsw4II94He7ZuaY-MOkQcAfcdGEZgeW5kLPOxDnR9-seiwS3m7D-5BnYwOlLFFhEvsQHjy7Qq8jrDRVThXkDaqi5qxA6TSrpepxDwc8ksD-oY-s9e95EnVYbjUBZVojlQJw";
+export const DOCUMENT_URN = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDIxLTEyLTE3LTEwLTI2LTM4LWQ0MWQ4Y2Q5OGYwMGIyMDRlOTgwMDk5OGVjZjg0MjdlLzczMTExNC5pcHQ";
 
 
 @Component({
@@ -12,6 +23,8 @@ import { Component, Input, OnInit, EventEmitter} from '@angular/core';
 
 
 export class MainComponent implements OnInit {
+
+  public viewerOptions: ViewerOptions;
 
   searchCat = '';
   
@@ -173,6 +186,9 @@ export class MainComponent implements OnInit {
       num: 721116,
       tags: 'колеса зубчатые колеса колесо зубчатое колесо'
     }
+
+
+    
     
   ];
 
@@ -534,7 +550,40 @@ export class MainComponent implements OnInit {
 
   
 
-  ngOnInit(): void {
+  public ngOnInit() {
+    this.viewerOptions = {
+      initializerOptions: {
+        env: "AutodeskProduction",
+        getAccessToken: (
+          onGetAccessToken: (token: string, expire: number) => void
+        ) => {
+          const expireTimeSeconds = 60 * 30;
+          onGetAccessToken(ACCESS_TOKEN, expireTimeSeconds);
+        },
+        api: "derivativeV2",
+        enableMemoryManagement: true
+      },
+      viewerConfig: {
+        extensions: ["Autodesk.DocumentBrowser", MyExtension.extensionName],
+        theme: "bim-theme"
+      },
+      onViewerScriptsLoaded: () => {
+        // Register a custom extension
+        Extension.registerExtension(MyExtension.extensionName, MyExtension);
+      },
+      onViewerInitialized: (args: ViewerInitializedEvent) => {
+        args.viewerComponent.DocumentId = DOCUMENT_URN;
+        //viewer.resize()
+      },
+      // showFirstViewable: false,
+      // headlessViewer: true,
+      // Set specific version number
+      //version: "7.41"
+    };
+  }
+
+  public selectionChanged(event: SelectionChangedEventArgs) {
+    console.log(event.dbIdArray);
   }
 
   treeDisplay = "none";
