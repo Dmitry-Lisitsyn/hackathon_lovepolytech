@@ -8,10 +8,9 @@ import {
   SelectionChangedEventArgs,
   Extension
 } from "ng2-adsk-forge-viewer";
+import { HttpService } from '../../services/http.service';
 import { MyExtension } from "./my-extension";
-
-export const ACCESS_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IlU3c0dGRldUTzlBekNhSzBqZURRM2dQZXBURVdWN2VhIn0.eyJzY29wZSI6WyJkYXRhOnJlYWQiLCJkYXRhOndyaXRlIiwiZGF0YTpjcmVhdGUiLCJidWNrZXQ6Y3JlYXRlIiwiYnVja2V0OnVwZGF0ZSIsImJ1Y2tldDpyZWFkIl0sImNsaWVudF9pZCI6IjN5dGNJRVBjbEVjck9VV0g2ZDZkWVFzVFJ4OUExT0lTIiwiYXVkIjoiaHR0cHM6Ly9hdXRvZGVzay5jb20vYXVkL2Fqd3RleHA2MCIsImp0aSI6ImI2VjM2TktFNFJXY3k3SjdEbnNMbXRIMW1TdjNaUzMzdzFWZEZMMG01Rnd1MVdQRXdubWtWaWRMQmlnMnpvMDMiLCJleHAiOjE2Mzk3NTQ2ODF9.dHCk1qenXb6JP8EeJeVDC7jB8L0zlYPWgcjIsvVXwNi5YIf-UXbxx6WKMNFRXjZTkMCMRxG0ZSuU-ETM9Ktz6wREAb1kEvW4SYTekHBFBWb3auEIBalKzFiOrX4LKIjPV7NU878ws7tRbUACkHqiyJHr7XLOjUMK04Ncat4-If8Afy4_TYKnFqujSzNdO7fgKWhu4NuGQfKEJ7zx6UiAOpS-MZ4Xn2HjRJj8fWRzRt11BYvMk-VOTTlQSaI9b1D8NlSEL9Lhpu713XaqJDE_s--e6OZkWmM_Ef9Kb516zjXrb3J82P5avPHI-RPbYrHPvJMNfwP-bBT587AcAgqcQQ";
-// export const DOCUMENT_URN = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDIxLTEyLTE3LTExLTQ0LTIyLWQ0MWQ4Y2Q5OGYwMGIyMDRlOTgwMDk5OGVjZjg0MjdlLzcxMTExMi5pcHQ";
+import {Token} from '../../../token';
 
 
 @Component({
@@ -37,6 +36,9 @@ export class MainComponent implements OnInit {
   
    emptylink = 'https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg';
    
+  elArray: {link: string, num?: number, tags?: string, description?: string, urn?: string}[]
+
+/*
    elArray: {link: string, num?: number, tags?: string, description?: string, urn?: string}[]= [
     {
       link: 'https://sun9-35.userapi.com/impg/0W0o665dWRAdfEsOCWnpx0PM7WsK5JHZChodPQ/oDCUIByU4uk.jpg?size=650x650&quality=96&sign=a5e85ed1273480110fc7fec47aeaebfd&type=album',
@@ -217,11 +219,10 @@ export class MainComponent implements OnInit {
       urn: ''
     }
 
-
     
     
   ];
-
+*/
 
 
   treeclass: {parent: number, classNum: number, caption: string}[]= [
@@ -520,7 +521,7 @@ export class MainComponent implements OnInit {
       
 
     }
-    console.log(this.elArray[1].description)
+    //console.log(this.elArray[1].description)
   }
   
   DOCUMENT_URN = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6bW9kZWwyMDIxLTEyLTE3LTEyLTU4LTIyLWQ0MWQ4Y2Q5OGYwMGIyMDRlOTgwMDk5OGVjZjg0MjdlLyVEMCVBMSVEMCVCMSVEMCVCRSVEMSU4MCVEMCVCQSVEMCVCMDEuU1RFUA'; 
@@ -567,10 +568,6 @@ export class MainComponent implements OnInit {
     document.body.style.overflow = "auto"
   }
 
-   //this.CreateChildren('0');
-    //let gal = document.getElementById("main-gallery-view")?.firstChild?.textContent;
-    //console.log('first div on this page is !' + gal + '!');
-
   ShowTree(){
     this.treeDisplay = "block"
     this.ShowShadowBox();
@@ -582,22 +579,34 @@ export class MainComponent implements OnInit {
     this.HideShadowBox()
   }
 
-  constructor() { 
+  constructor(private http: HttpService) { 
+
   }
 
   
+  public  token: Token;
 
   public ngOnInit() {
+
+    this.http.getToken().subscribe((data:any) => this.token = new Token(data.access_token, data.expires_in));
+    
+    this.http.getXuy().subscribe((res: any) => {
+      this.elArray = res
+      //console.log(this.elArray)
+    });
     
     
+
     this.viewerOptions = {
       initializerOptions: {
         env: "AutodeskProduction",
         getAccessToken: (
           onGetAccessToken: (token: string, expire: number) => void
         ) => {
-          const expireTimeSeconds = 60 * 30;
-          onGetAccessToken(ACCESS_TOKEN, expireTimeSeconds);
+          onGetAccessToken(this.token.access_token, this.token.expires_in);
+          console.log(this.token.access_token)
+          // const expireTimeSeconds = 60 * 30;
+          // onGetAccessToken(ACCESS_TOKEN, expireTimeSeconds);
         },
         api: "derivativeV2",
         enableMemoryManagement: true
@@ -623,7 +632,7 @@ export class MainComponent implements OnInit {
   }
 
   public selectionChanged(event: SelectionChangedEventArgs) {
-    console.log(event.dbIdArray);
+    //console.log(event.dbIdArray);
   }
 
   treeDisplay = "none";
@@ -683,7 +692,7 @@ export class MainComponent implements OnInit {
       if(num == classEl.num){
         if(classEl.urn)
         this.DOCUMENT_URN = classEl.urn
-        console.log(this.DOCUMENT_URN);
+        //console.log(this.DOCUMENT_URN);
       }
 
     }

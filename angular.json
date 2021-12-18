@@ -72,7 +72,8 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "projectVKR:build:production"
+              "browserTarget": "projectVKR:build:production",
+              "proxyConfig": "proxy.conf.json"         
             },
             "development": {
               "browserTarget": "projectVKR:build:development"
@@ -80,6 +81,7 @@
           },
           "defaultConfiguration": "development"
         },
+       
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {

@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TreefilterComponent } from './shared/components/treefilter/treefilter.component';
 import { ClassviewComponent } from './shared/components/classview/classview.component';
 import { ViewerModule } from 'ng2-adsk-forge-viewer';
+import { HttpClientModule }   from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { ViewerModule } from 'ng2-adsk-forge-viewer';
     MyfilterPipe,
     TreefilterComponent,
     ClassviewComponent,
-
+    
   ],
   imports: [
     BrowserModule,
@@ -31,6 +32,7 @@ import { ViewerModule } from 'ng2-adsk-forge-viewer';
     FormsModule,
     ReactiveFormsModule,
     ViewerModule,
+    HttpClientModule
     
   ],
   bootstrap: [AppComponent]
