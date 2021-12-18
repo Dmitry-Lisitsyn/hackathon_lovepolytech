@@ -9,8 +9,6 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { ESKDClassElementComponent } from './eskdclass-element/eskdclass-element.component';
 import { MyfilterPipe } from './shared/pipes/myfilter.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TreefilterComponent } from './shared/components/treefilter/treefilter.component';
-import { ClassviewComponent } from './shared/components/classview/classview.component';
 import { ViewerModule } from 'ng2-adsk-forge-viewer';
 import { HttpClientModule }   from '@angular/common/http';
 
@@ -20,9 +18,7 @@ import { HttpClientModule }   from '@angular/common/http';
     MainComponent,
     HeaderComponent,
     ESKDClassElementComponent,
-    MyfilterPipe,
-    TreefilterComponent,
-    ClassviewComponent,
+    MyfilterPipe
     
   ],
   imports: [

@@ -1,9 +1,0 @@
-{
-    "/xyu": {
-      "target": "http://localhost:3000",
-      "secure": false,
-      "pathRewrite": {"^/xyu": "http://localhost:3000/cum"},
-      "logLevel": "debug",
-      "changeOrigin": true
-    }
-  }
