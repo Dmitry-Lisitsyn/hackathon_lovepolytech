@@ -10,6 +10,10 @@ export class MyExtension extends Extension {
   private subToolbar: Autodesk.Viewing.UI.ToolBar;
   private onToolbarCreatedBinded: any;
 
+  private viewerFrame: Autodesk.Viewing.GuiViewer3D;
+
+
+
   public activate() {
     return true;
   }
@@ -21,7 +25,7 @@ export class MyExtension extends Extension {
   public load() {
     // Called when Forge Viewer loads your extension
     console.log('MyExtension loaded!');
-
+    
     this.viewer.addEventListener(Autodesk.Viewing.SELECTION_CHANGED_EVENT, (e) => {
       if (e.dbIdArray.length) {
         const dbId = e.dbIdArray[0];
